@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A letter for you</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbcfe0; --bg2:#fde7ef; --paper:#fffaf5; --ink:#4a2b3c; --title:#c2255c; --stem:#5f9a5a;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#3a1428;--bg2:#5a2140;--stem:#6fae69}}
+:root[data-theme="dark"]{--bg:#3a1428;--bg2:#5a2140;--stem:#6fae69}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);background-image:radial-gradient(circle at 50% 20%,var(--bg2),var(--bg) 70%);background-attachment:fixed;color:var(--ink);font-family:"Caveat",cursive,Georgia,serif;overflow-x:hidden}
+#garden{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.flower{position:absolute;bottom:0;animation:fade 3s ease 14s forwards}
+.flower .stem{fill:none;stroke:var(--stem);stroke-width:3;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:grow 3s ease-out forwards}
+.flower .head{transform-box:fill-box;transform-origin:center;transform:scale(0) rotate(-40deg);animation:open 2.2s cubic-bezier(.3,1.5,.5,1) 2.6s forwards}
+.flower .sway{transform-box:fill-box;transform-origin:50% 100%;animation:sway 5s ease-in-out 5s infinite alternate}
+.heart{position:absolute;bottom:-40px;animation:floatUp var(--d) ease-in forwards}
+@keyframes grow{to{stroke-dashoffset:0}}
+@keyframes open{to{transform:scale(1) rotate(0)}}
+@keyframes sway{from{transform:rotate(-2deg)}to{transform:rotate(2deg)}}
+@keyframes fade{to{opacity:0}}
+@keyframes floatUp{0%{transform:translate(0,0) rotate(-12deg);opacity:0}12%{opacity:.9}50%{transform:translate(var(--dx),-55vh) rotate(12deg)}100%{transform:translate(calc(var(--dx)*-.5),-115vh) rotate(-8deg);opacity:0}}
+main{position:relative;z-index:1;display:flex;justify-content:center;padding:6vh 16px 18vh}
+.paper{width:100%;max-width:620px;background:var(--paper);padding:clamp(28px,6vw,56px);border-radius:4px;
+  box-shadow:0 2px 0 #f0d5de,0 18px 40px rgba(120,20,60,.25);opacity:.94;
+  background-image:repeating-linear-gradient(transparent 0 35px,rgba(220,120,160,.2) 35px 36px)}
+h1{font:italic 500 clamp(2rem,6vw,2.8rem)/1.1 "Cormorant Garamond",Georgia,serif;margin:0 0 20px;color:var(--title)}
+p{font-size:clamp(1.35rem,3.6vw,1.65rem);line-height:36px;margin:0 0 36px}
+.sign{text-align:right;color:var(--title);font-weight:600;margin:0}
+button{margin-top:28px;font:600 1.2rem "Caveat",cursive;color:#fff;background:#e64980;border:0;border-radius:99px;padding:8px 22px;cursor:pointer}
+button:focus-visible{outline:3px solid #a61e4d;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.flower *{animation-duration:.01s!important;animation-delay:0s!important}.flower{animation:none}.heart{display:none}}
+
+[hidden]{display:none!important}
+.stage{display:flex;flex-direction:column;align-items:center;gap:18px;margin-top:16vh;transition:opacity .8s ease,transform .8s ease}
+.stage.gone{opacity:0;transform:translateY(24px)}
+.envelope{position:relative;display:block;width:min(340px,86vw);aspect-ratio:3/2;margin:0;padding:0;border:0;border-radius:0;background:none;cursor:pointer;animation:bob 2.6s ease-in-out infinite}
+.stage.open .envelope{animation:none}
+.e-back,.e-sheet,.e-front,.e-flap,.e-seal{position:absolute;display:block}
+.e-back{inset:0;background:#d6336c;border-radius:6px}
+.e-sheet{left:7%;right:7%;top:8%;height:78%;background:var(--paper);border-radius:3px;z-index:2;transition:transform .9s ease .55s;display:flex;align-items:center;justify-content:center;font:italic 500 1.7rem "Cormorant Garamond",Georgia,serif;color:var(--title)}
+.stage.open .e-sheet{transform:translateY(-52%)}
+.e-front{inset:0;background:#f06595;clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);z-index:3;border-radius:6px}
+.e-flap{left:0;right:0;top:0;height:56%;background:#f783ac;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;z-index:4;transition:transform .6s ease,z-index 0s .3s}
+.stage.open .e-flap{transform:rotateX(180deg);z-index:1}
+.e-seal{left:50%;top:40%;width:34px;height:34px;margin:-17px 0 0 -17px;z-index:5;transition:opacity .3s}
+.stage.open .e-seal{opacity:0}
+p.hint{font-size:1.6rem;line-height:1.2;margin:0;color:var(--title);transition:opacity .3s}
+.stage.open .hint{opacity:0}
+.paper.show{animation:rise 1s ease both}
+@keyframes bob{50%{transform:translateY(-8px)}}
+@keyframes rise{from{opacity:0;transform:translateY(40px) scale(.97)}to{opacity:.94;transform:none}}
+@media (prefers-reduced-motion:reduce){.envelope{animation:none}.paper.show{animation:none}}
+</style>
+</head>
+<body>
+<div id="garden" aria-hidden="true"></div>
+<main>
+  <div class="stage" id="stage">
+    <button class="envelope" id="env" type="button" aria-label="Open the letter">
+      <span class="e-back"></span><span class="e-sheet">For Melly</span><span class="e-front"></span><span class="e-flap"></span>
+      <svg class="e-seal" viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" fill="#fff0f3"/></svg>
+    </button>
+    <p class="hint">Tap to open</p>
+  </div>
+  <article class="paper" id="paper" hidden>
+    <!-- EDIT THE LETTER TEXT HERE -->
+    <h1>Heyy Melly,</h1>
+    <p>I’ve started writing this for the fourth time now. Somehow, I just can’t seem to find the right words. It’s hard to put you into words, to describe someone like you. Your strong, confident, and honest personality is just so incredibly captivating.</p>
+    <p>I’m really happy that we’re talking and that this whole thing between us exists. Like I’ve mentioned before, none of this was part of my original plan at all. But I don’t regret it for a second, because now I wake up every day with this feeling that I miss you, wishing I could share every minute of my day with you.</p>
+    <p>I’m so grateful for you. Every day, I try to become a little better, for you and for us.</p>
+    <p class="sign">Roli</p>
+    <button id="more" type="button">More flowers</button>
+  </article>
+</main>
+<script>
+(function(){
+  var garden=document.getElementById('garden'), NS='http://www.w3.org/2000/svg';
+  function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+  function pick(a){return a[Math.floor(Math.random()*a.length)]}
+
+  function rose(g){
+    var p=pick([['#d6336c','#e64980','#f06595','#a61e4d'],['#c92a2a','#e03131','#fa5252','#8f1d1d'],['#f783ac','#faa2c1','#fcc2d7','#c2255c']]);
+    el('circle',{r:19,fill:p[0]},g);
+    el('circle',{r:14,fill:p[1],stroke:p[3],'stroke-width':1},g);
+    el('circle',{r:9,fill:p[2],stroke:p[3],'stroke-width':1},g);
+    el('path',{d:'M-5 0 C-5 -6 5 -6 5 0 C5 5 -2 6 -3 2',fill:'none',stroke:p[3],'stroke-width':1.5,'stroke-linecap':'round'},g);
+  }
+  function tulip(g){
+    var c=pick([['#e8590c','#ff922b'],['#e64980','#f783ac'],['#f03e3e','#ff8787'],['#fcc419','#ffe066'],['#ae3ec9','#da77f2']]);
+    el('path',{d:'M0 8 C-18 8 -19 -16 -12 -28 C-6 -18 0 -12 0 8Z',fill:c[0]},g);
+    el('path',{d:'M0 8 C18 8 19 -16 12 -28 C6 -18 0 -12 0 8Z',fill:c[0]},g);
+    el('path',{d:'M0 10 C-11 0 -11 -18 0 -33 C11 -18 11 0 0 10Z',fill:c[1]},g);
+  }
+  function lily(g){
+    var c=pick([['#fff0f5','#f0a1c0'],['#ffd6e5','#e64980'],['#fff','#f4a259']]);
+    for(var i=0;i<6;i++){
+      var r=i*60+(i%2?0:0);
+      el('path',{d:'M0 0 C-8 -9 -7 -24 0 -34 C7 -24 8 -9 0 0Z',fill:c[0],stroke:c[1],'stroke-width':1,transform:'rotate('+r+')'},g);
+      el('path',{d:'M0 -4 L0 -22',stroke:c[1],'stroke-width':1.5,'stroke-linecap':'round',transform:'rotate('+r+')'},g);
+    }
+    for(var j=0;j<5;j++){
+      var a=j*72;
+      el('line',{x1:0,y1:0,x2:0,y2:-14,stroke:'#b5651d','stroke-width':1,transform:'rotate('+a+')'},g);
+      el('circle',{cx:0,cy:-15,r:2.2,fill:'#f59f00',transform:'rotate('+a+')'},g);
+    }
+  }
+  var types=[rose,tulip,lily];
+
+  function bloom(){
+    var h=140+Math.random()*(innerHeight*.45), W=110, H=h+75, top=55;
+    var bend=(Math.random()-.5)*40, sc=.9+Math.random()*.5;
+    var s=el('svg',{viewBox:'0 0 '+W+' '+H,width:W,height:H,class:'flower'});
+    s.style.left=(Math.random()*100)+'%';
+    s.style.marginLeft=(-W/2)+'px';
+    var sway=el('g',{class:'sway'},s), tx=W/2+bend;
+    el('path',{class:'stem',pathLength:1,d:'M'+W/2+' '+H+' Q'+(W/2-bend)+' '+(H*.55)+' '+tx+' '+top},sway);
+    var wrap=el('g',{transform:'translate('+tx+' '+top+') scale('+sc+')'},sway);
+    var head=el('g',{class:'head'},wrap);
+    pick(types)(head);
+    garden.appendChild(s);
+    setTimeout(function(){s.remove()},17500);
+  }
+
+  function heart(){
+    var size=16+Math.random()*20, d=6+Math.random()*4;
+    var d0=el('svg',{viewBox:'0 0 24 24',width:size,height:size,class:'heart'});
+    d0.style.left=(Math.random()*96)+'%';
+    d0.style.setProperty('--d',d+'s');
+    d0.style.setProperty('--dx',((Math.random()-.5)*120)+'px');
+    el('path',{d:'M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z',fill:pick(['#ff4d6d','#ff758f','#ff8fa3','#e64980','#fff0f3'])},d0);
+    garden.appendChild(d0);
+    setTimeout(function(){d0.remove()},d*1000+200);
+  }
+
+  function wave(k){for(var i=0;i<k;i++)setTimeout(bloom,i*350)}
+  var started=false;
+  function start(){wave(9);setInterval(bloom,1500);setInterval(heart,900)}
+  document.getElementById('env').addEventListener('click',function(){
+    if(started)return;started=true;
+    var st=document.getElementById('stage'),paper=document.getElementById('paper');
+    st.classList.add('open');start();
+    setTimeout(function(){st.classList.add('gone')},1700);
+    setTimeout(function(){st.hidden=true;paper.hidden=false;paper.classList.add('show');scrollTo(0,0)},2500);
+  });
+  document.getElementById('more').addEventListener('click',function(){wave(6);for(var i=0;i<6;i++)setTimeout(heart,i*150)});
+})();
+</script>
+</body>
+</html>
